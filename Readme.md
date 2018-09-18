@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Dmitriy Kobilskikh](https://up.htmlacademy.ru/javascript/15/user/869123).
-* Наставник: `Евгений Закурдаев`(https://htmlacademy.ru/profile/eugeno).
+* Наставник: [Евгений Закурдаев](https://up.htmlacademy.ru/javascript/15/user/25657).
 
 ---
 
