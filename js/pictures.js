@@ -24,9 +24,23 @@ var LIKES_MAX_AMOUNT = 200;
 
 var picturesList = document.querySelector('.pictures');
 
+// Возвращает случайное число от min до max
+
 var getRandonNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+// возвращает фрагмент из массива elements;
+
+var getFragment = function (elements) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < elements.length; i++) {
+    fragment.appendChild(elements[i]);
+  }
+  return fragment;
+};
+
+// Возвращает массив "комментариев", с количеством элементов commentAmount.
 
 var getComments = function (commentAmount) {
   var commentsList = [];
@@ -35,6 +49,8 @@ var getComments = function (commentAmount) {
   }
   return commentsList;
 };
+
+// Возвращает массив картинок случайных пользователей
 
 var getCards = function () {
   var pictures = [];
@@ -49,6 +65,8 @@ var getCards = function () {
   return pictures;
 };
 
+// Генерирует карточку с фотографией случайноного пользователя
+
 var renderCard = function (cards) {
   var picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var element = picturesTemplate.cloneNode(true);
@@ -58,28 +76,37 @@ var renderCard = function (cards) {
   return element;
 };
 
-var getFragment = function () {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < pictureCards.length; i++) {
-    fragment.appendChild(renderCard(pictureCards[i]));
+// создает набор карточек с фотографиями случайнных пользователей
+
+var renderCards = function (pictures) {
+  var pictureCards = [];
+  for (var i = 0; i < pictures.length; i++) {
+    pictureCards.push(renderCard(pictures[i]));
   }
-  return fragment;
+  return pictureCards;
 };
 
-var pictureCards = getCards();
+// инициирование фотографии др. пользователей
 
-picturesList.appendChild(getFragment());
+var initOtherUsersPictures = function () {
+  picturesList.appendChild(getFragment(renderCards(otherUsersPictures)));
+};
 
 var initBigPicture = function () {
+  // Показываем элемент .big-picture
   var bigPicture = document.querySelector('.big-picture');
   bigPicture.classList.remove('hidden');
-  bigPicture.querySelector('img').src = pictureCards[0].url;
-  bigPicture.querySelector('.likes-count').textContent = pictureCards[0].likes;
-  bigPicture.querySelector('.comments-count').textContent = pictureCards[0].comments.length;
-  bigPicture.querySelector('.social__caption').textContent = pictureCards[0].description;
+  // Заполняем данными
+  bigPicture.querySelector('img').src = otherUsersPictures[0].url;
+  bigPicture.querySelector('.likes-count').textContent = otherUsersPictures[0].likes;
+  bigPicture.querySelector('.comments-count').textContent = otherUsersPictures[0].comments.length;
+  bigPicture.querySelector('.social__caption').textContent = otherUsersPictures[0].description;
 
+  // генерирует элементы с комментариями
   var getBigPictureComment = function (comments) {
-    var socialComments = document.createDocumentFragment();
+
+    var socialComments = [];
+
     for (var i = 0; i < comments.length; i++) {
       var socialComment = document.createElement('li');
       socialComment.classList.add('social__comment');
@@ -92,14 +119,24 @@ var initBigPicture = function () {
       socialText.classList.add('social__text');
       socialText.textContent = comments[i];
       socialComment.appendChild(socialText);
-      socialComments.appendChild(socialComment);
+      socialComments.push(socialComment);
     }
-    return socialComments;
+    return getFragment(socialComments);
   };
-  document.querySelector('.social__comments').appendChild(getBigPictureComment(pictureCards[0].comments));
-  document.querySelector('.social__comment-count').classList.add('visually-hidden');
-  document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+  document.querySelector('.social__comments').appendChild(getBigPictureComment(otherUsersPictures[0].comments));
 };
 
+// Получаем данные картинок др. пользователей, записываем в глобальную переменную "otherUsersPictures"
+
+var otherUsersPictures = getCards();
+
+initOtherUsersPictures();
+
 initBigPicture();
+
+// убираем блоки счётчика комментариев
+document.querySelector('.social__comment-count').classList.add('visually-hidden');
+// убираем блоки загрузки новых комментариев
+document.querySelector('.comments-loader').classList.add('visually-hidden');
 
