@@ -96,6 +96,12 @@ var initBigPicture = function () {
   // Показываем элемент .big-picture
   var bigPicture = document.querySelector('.big-picture');
   bigPicture.classList.remove('hidden');
+
+  // Закрываем элемент .big-picture по клику на крестик
+  var bigPictureCancel = document.querySelector('.big-picture__cancel');
+  bigPictureCancel.addEventListener('click', function () {
+    bigPicture.classList.add('hidden');
+  });
   // Заполняем данными
   bigPicture.querySelector('img').src = otherUsersPictures[0].url;
   bigPicture.querySelector('.likes-count').textContent = otherUsersPictures[0].likes;
@@ -133,10 +139,155 @@ var otherUsersPictures = getCards();
 
 initOtherUsersPictures();
 
-initBigPicture();
-
 // убираем блоки счётчика комментариев
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 // убираем блоки загрузки новых комментариев
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
+// объявление переменных
+
+var ESC_KEYCODE = 27;
+
+var uploadFile = document.querySelector('#upload-file');
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var imgUploadCancel = document.querySelector('.img-upload__cancel');
+
+// После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
+
+uploadFile.addEventListener('change', function () {
+  imgUploadOverlay.classList.remove('hidden');
+});
+
+// Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
+
+imgUploadCancel.addEventListener('click', function () {
+  imgUploadOverlay.classList.add('hidden');
+});
+
+// Закрытие формы редактирования изображения по нажатию на кнопку ESC
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    imgUploadOverlay.classList.add('hidden');
+  }
+});
+
+// Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
+
+var picturesListElements = picturesList.querySelectorAll('a');
+
+for (var i = 0; i < picturesListElements.length; i++) {
+  picturesListElements[i].addEventListener('click', function () {
+    initBigPicture();
+  });
+}
+
+// Сброс настроек фильтров при переключении
+
+var resetEffects = function () {
+  imgUploadPreview.removeAttribute('style');
+};
+
+// Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin
+
+var EFFECT_LEVEL_LINE = 453;
+var effectIntensionLevel = 100;
+var effectLevelPin = document.querySelector('.effect-level__pin');
+var effectLevelLine = document.querySelector('.img-upload__effect-level');
+effectLevelLine.classList.add('hidden');
+
+effectLevelPin.addEventListener('mouseup', function () {
+  var pinPosition = (getComputedStyle(effectLevelPin));
+  effectIntensionLevel = Math.round((parseInt(pinPosition.left, 10) * 100) / EFFECT_LEVEL_LINE);
+
+  if (imgUploadPreviewCurentClass === 'effects__preview--chrome') {
+    imgUploadPreview.style.filter = 'grayscale(' + (effectIntensionLevel / 100) + ')';
+  } else if (imgUploadPreviewCurentClass === 'effects__preview--sepia') {
+    imgUploadPreview.style.filter = 'sepia(' + (effectIntensionLevel / 100) + ')';
+  } else if (imgUploadPreviewCurentClass === 'effects__preview--marvin') {
+    imgUploadPreview.style.filter = 'invert(' + effectIntensionLevel + '%)';
+  } else if (imgUploadPreviewCurentClass === 'effects__preview--phobos') {
+    imgUploadPreview.style.filter = 'blur(' + Math.round(effectIntensionLevel / 30) + 'px)';
+  } else if (imgUploadPreviewCurentClass === 'effects__preview--heat') {
+    imgUploadPreview.style.filter = 'brightness(' + Math.ceil(effectIntensionLevel / 30) + ')';
+  }
+});
+
+// Применение эффекта для изображения
+
+var imgUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
+var imgUploadPreviewCurentClass = 'effects__preview--none';
+
+// без эффекта
+var effectItemNone = document.querySelector('#effect-none');
+
+effectItemNone.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.add('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--none');
+  imgUploadPreviewCurentClass = 'effects__preview--none';
+});
+
+//
+
+// Эфект chrome
+
+var effectItemChrome = document.querySelector('#effect-chrome');
+effectItemChrome.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.remove('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--chrome');
+  imgUploadPreviewCurentClass = 'effects__preview--chrome';
+});
+
+// Эффект sepia
+
+var effectItemSepia = document.querySelector('#effect-sepia');
+effectItemSepia.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.remove('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--sepia');
+  imgUploadPreviewCurentClass = 'effects__preview--sepia';
+});
+
+// Эффект marvin
+
+var effectItemMarvin = document.querySelector('#effect-marvin');
+effectItemMarvin.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.remove('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--marvin');
+  imgUploadPreviewCurentClass = 'effects__preview--marvin';
+});
+
+// Эффект phobos
+
+var effectItemPhobos = document.querySelector('#effect-phobos');
+effectItemPhobos.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.remove('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--phobos');
+  imgUploadPreviewCurentClass = 'effects__preview--phobos';
+});
+
+// Эффект heat
+
+var effectItemHeat = document.querySelector('#effect-heat');
+effectItemHeat.addEventListener('change', function () {
+  resetEffects();
+  effectLevelLine.classList.remove('hidden');
+  effectIntensionLevel = 100;
+  imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+  imgUploadPreview.classList.add('effects__preview--heat');
+  imgUploadPreviewCurentClass = 'effects__preview--heat';
+});
