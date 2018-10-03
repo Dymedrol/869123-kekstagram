@@ -221,10 +221,8 @@ effectLevelPin.addEventListener('mouseup', function () {
 var imgUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
 var imgUploadPreviewCurentClass = 'effects__preview--none';
 
-var effectsList = document.querySelector('.effects__list').querySelectorAll('li');
-
-var effectChangeHandler = function () {
-  var currentValue = this.value;
+var effectChangeHandler = function (evt) {
+  var currentValue = evt.target.value;
 
   if (currentValue === 'none') {
     effectLevelLine.classList.add('hidden');
@@ -235,30 +233,10 @@ var effectChangeHandler = function () {
   resetEffects();
   effectIntensionLevel = 100;
   imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
-
-  switch (currentValue) {
-    case 'none': imgUploadPreviewCurentClass = 'effects__preview--none';
-      break;
-    case 'chrome': imgUploadPreviewCurentClass = 'effects__preview--chrome';
-      break;
-    case 'sepia': imgUploadPreviewCurentClass = 'effects__preview--sepia';
-      break;
-    case 'marvin': imgUploadPreviewCurentClass = 'effects__preview--marvin';
-      break;
-    case 'phobos': imgUploadPreviewCurentClass = 'effects__preview--phobos';
-      break;
-    case 'heat': imgUploadPreviewCurentClass = 'effects__preview--heat';
-      break;
-  }
-
+  imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
   imgUploadPreview.classList.add(imgUploadPreviewCurentClass);
 };
 
-var createEffectsListener = function () {
-  for (var j = 0; j < effectsList.length; j++) {
-    effectsList[j].querySelector('input').addEventListener('change', effectChangeHandler);
-  }
-};
-
-createEffectsListener();
-
+document.querySelectorAll('input[name="effect"]').forEach(function (input) {
+  input.addEventListener('change', effectChangeHandler);
+});
