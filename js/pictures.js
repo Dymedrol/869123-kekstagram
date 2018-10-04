@@ -92,9 +92,10 @@ var initOtherUsersPictures = function () {
   picturesList.appendChild(getFragment(renderCards(otherUsersPictures)));
 };
 
+var bigPicture = document.querySelector('.big-picture');
+
 var initBigPicture = function () {
   // Показываем элемент .big-picture
-  var bigPicture = document.querySelector('.big-picture');
   bigPicture.classList.remove('hidden');
 
   // Закрываем элемент .big-picture по клику на крестик
@@ -172,7 +173,8 @@ document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     imgUploadOverlay.classList.add('hidden');
   }
-  if (textDescription.focused) {console.log('qqqqqqqqqqqqq')};
+  if (textDescription.focused) {
+  }
 });
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
@@ -243,10 +245,6 @@ var effectChangeHandler = function (evt) {
 document.querySelectorAll('input[name="effect"]').forEach(function (input) {
   input.addEventListener('change', effectChangeHandler);
 });
-
-// Валидация формы
-
-var imgUploadSubmitButton = document.querySelector('.img-upload__submit');
 
 // Открытие сообщения об отправке
 
