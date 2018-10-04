@@ -157,21 +157,25 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
 uploadFile.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', closeImgUploadOverlayHandler);
 });
 
 // Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
 
 imgUploadCancel.addEventListener('click', function () {
   imgUploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', closeImgUploadOverlayHandler);
 });
 
 // Закрытие формы редактирования изображения по нажатию на кнопку ESC
+var textHashtags = document.querySelector('.text__hashtags');
 
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+var closeImgUploadOverlayHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && evt.target !== textHashtags) {
     imgUploadOverlay.classList.add('hidden');
+    document.removeEventListener('keydown', closeImgUploadOverlayHandler);
   }
-});
+};
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
 
