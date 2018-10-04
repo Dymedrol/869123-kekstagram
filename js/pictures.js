@@ -165,11 +165,14 @@ imgUploadCancel.addEventListener('click', function () {
 });
 
 // Закрытие формы редактирования изображения по нажатию на кнопку ESC
+// если фокус находится в поле ввода комментария, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
+var textDescription = document.querySelector('.text__description');
 
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     imgUploadOverlay.classList.add('hidden');
   }
+  if (textDescription.focused) {console.log('qqqqqqqqqqqqq')};
 });
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
@@ -240,3 +243,23 @@ var effectChangeHandler = function (evt) {
 document.querySelectorAll('input[name="effect"]').forEach(function (input) {
   input.addEventListener('change', effectChangeHandler);
 });
+
+// Валидация формы
+
+var imgUploadSubmitButton = document.querySelector('.img-upload__submit');
+
+// Открытие сообщения об отправке
+
+var main = document.querySelector('main');
+
+var successWindow = document.querySelector('#success').content.querySelector('.success');
+var errorWindow = document.querySelector('#error').content.querySelector('.error');
+
+var openSuccsessWindow = function () {
+  main.appendChild(successWindow);
+  bigPicture.classList.add('hidden');
+};
+
+var openErrorWindow = function () {
+  main.appendChild(errorWindow);
+};
