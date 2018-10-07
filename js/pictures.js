@@ -92,9 +92,10 @@ var initOtherUsersPictures = function () {
   picturesList.appendChild(getFragment(renderCards(otherUsersPictures)));
 };
 
+var bigPicture = document.querySelector('.big-picture');
+
 var initBigPicture = function () {
   // Показываем элемент .big-picture
-  var bigPicture = document.querySelector('.big-picture');
   bigPicture.classList.remove('hidden');
 
   // Закрываем элемент .big-picture по клику на крестик
@@ -153,34 +154,45 @@ var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
+var imgUploadInput = document.querySelector('.img-upload__input');
 
 uploadFile.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', closeImgUploadOverlayHandler);
 });
+
+// Закрытие формы редактирования изображения по нажатию на кнопку ESC
+var textHashtags = document.querySelector('.text__hashtags');
+
+var closeImgUploadOverlayHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && evt.target !== textHashtags) {
+    imgUploadOverlay.classList.add('hidden');
+    imgUploadInput.value = '';
+    document.removeEventListener('keydown', closeImgUploadOverlayHandler);
+  }
+};
 
 // Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
 
 imgUploadCancel.addEventListener('click', function () {
   imgUploadOverlay.classList.add('hidden');
-});
-
-// Закрытие формы редактирования изображения по нажатию на кнопку ESC
-
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    imgUploadOverlay.classList.add('hidden');
-  }
+  imgUploadInput.value = '';
+  document.removeEventListener('keydown', closeImgUploadOverlayHandler);
 });
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
 
 var picturesListElements = picturesList.querySelectorAll('a');
 
-for (var i = 0; i < picturesListElements.length; i++) {
-  picturesListElements[i].addEventListener('click', function () {
-    initBigPicture();
-  });
-}
+var setOpenBigPictureListener = function () {
+  for (var i = 0; i < picturesListElements.length; i++) {
+    picturesListElements[i].addEventListener('click', function () {
+      initBigPicture();
+    });
+  }
+};
+
+setOpenBigPictureListener();
 
 // Сброс настроек фильтров при переключении
 
@@ -240,3 +252,27 @@ var effectChangeHandler = function (evt) {
 document.querySelectorAll('input[name="effect"]').forEach(function (input) {
   input.addEventListener('change', effectChangeHandler);
 });
+
+// Открытие сообщения об отправке
+
+var main = document.querySelector('main');
+
+var successWindow = document.querySelector('#success').content.querySelector('.success');
+var errorWindow = document.querySelector('#error').content.querySelector('.error');
+
+var submitHandler = function (evt) {
+  var inputs = evt.target.querySelectorAll('input');
+
+  for (var i = 0; i < inputs.length; i++) {
+    if (!inputs[i].validity.valid) {
+      main.appendChild(errorWindow);
+    } else {
+      main.appendChild(successWindow);
+      bigPicture.classList.add('hidden');
+    }
+  }
+};
+
+var imgUploadSubmit = document.querySelector('.img-upload__form');
+
+imgUploadSubmit.addEventListener('submit', submitHandler);
