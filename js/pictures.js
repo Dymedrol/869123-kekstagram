@@ -155,12 +155,9 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
 var imgUploadInput = document.querySelector('.img-upload__input');
-console.log(imgUploadInput);
-console.dir(imgUploadInput);
 
 uploadFile.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
-  console.dir(imgUploadInput);
   document.addEventListener('keydown', closeImgUploadOverlayHandler);
 });
 
@@ -175,8 +172,6 @@ var closeImgUploadOverlayHandler = function (evt) {
   }
 };
 
-
-
 // Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
 
 imgUploadCancel.addEventListener('click', function () {
@@ -184,10 +179,6 @@ imgUploadCancel.addEventListener('click', function () {
   imgUploadInput.value = '';
   document.removeEventListener('keydown', closeImgUploadOverlayHandler);
 });
-
-
-
-
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
 
