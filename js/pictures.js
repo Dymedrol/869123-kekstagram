@@ -154,17 +154,14 @@ var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
+var imgUploadInput = document.querySelector('.img-upload__input');
+console.log(imgUploadInput);
+console.dir(imgUploadInput);
 
 uploadFile.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
+  console.dir(imgUploadInput);
   document.addEventListener('keydown', closeImgUploadOverlayHandler);
-});
-
-// Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
-
-imgUploadCancel.addEventListener('click', function () {
-  imgUploadOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', closeImgUploadOverlayHandler);
 });
 
 // Закрытие формы редактирования изображения по нажатию на кнопку ESC
@@ -173,9 +170,24 @@ var textHashtags = document.querySelector('.text__hashtags');
 var closeImgUploadOverlayHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE && evt.target !== textHashtags) {
     imgUploadOverlay.classList.add('hidden');
+    imgUploadInput.value = '';
     document.removeEventListener('keydown', closeImgUploadOverlayHandler);
   }
 };
+
+
+
+// Закрытие формы редактирования изображения по клику на кнопку .upload-cancel
+
+imgUploadCancel.addEventListener('click', function () {
+  imgUploadOverlay.classList.add('hidden');
+  imgUploadInput.value = '';
+  document.removeEventListener('keydown', closeImgUploadOverlayHandler);
+});
+
+
+
+
 
 // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
 
