@@ -23,16 +23,14 @@
     return pictureCards;
   };
 
+  // Получаем данные картинок др. пользователей, записываем в глобальную переменную "otherUsersPictures"
+
+  window.otherUsersPictures = window.getCards();
+
   // инициирование фотографии др. пользователей
 
   window.initOtherUsersPictures = function () {
     window.picturesList.appendChild(window.getFragment(renderCards(window.otherUsersPictures)));
   };
-
-  // Получаем данные картинок др. пользователей, записываем в глобальную переменную "otherUsersPictures"
-
-  window.otherUsersPictures = window.getCards();
-
-  window.initOtherUsersPictures();
 
 })();
