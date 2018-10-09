@@ -82,6 +82,16 @@
   var successWindow = document.querySelector('#success').content.querySelector('.success');
   var errorWindow = document.querySelector('#error').content.querySelector('.error');
 
+  var successHandler = function () {
+    main.appendChild(successWindow);
+    imgUploadOverlay.classList.add('hidden');
+    imgUploadInput.value = '';
+  };
+
+  var errorHandler = function () {
+    main.appendChild(errorWindow);
+  };
+
   var submitHandler = function (evt) {
     var inputs = evt.target.querySelectorAll('input');
 
@@ -89,8 +99,7 @@
       if (!inputs[i].validity.valid) {
         main.appendChild(errorWindow);
       } else {
-        main.appendChild(successWindow);
-        window.bigPicture.classList.add('hidden');
+        window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
       }
     }
   };

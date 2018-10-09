@@ -2,22 +2,35 @@
 
 (function () {
 
-  // инициируем фотографии других пользователей
-
-  window.initOtherUsersPictures();
-
-  // Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
-
-  var picturesListElements = window.picturesList.querySelectorAll('a');
-
-  var setOpenBigPictureListener = function () {
-    for (var i = 0; i < picturesListElements.length; i++) {
-      picturesListElements[i].addEventListener('click', function () {
-        window.initBigPicture();
-      });
-    }
+  var successLoadHandler = function (data) {
+    window.getCards(data);
+    window.initOtherUsersPictures();
+    var picturesListElements = window.picturesList.querySelectorAll('a');
+    window.getId(picturesListElements);
+    setOpenBigPictureListener();
   };
 
-  setOpenBigPictureListener();
+  var errorLoadHandler = function () {
+
+  };
+
+  // Установка листенера. Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
+
+  var setOpenBigPictureListener = function () {
+    var pictureSection = document.querySelector('.pictures');
+    pictureSection.addEventListener('click', function (evt) {
+      var target = evt.target;
+      while (!target.classList.contains('picture')) {
+        target = target.parentNode;
+      }
+      var id = target.id;
+      window.initBigPicture(window.otherUsersPictures[id]);
+      event.stopPropagation();
+    });
+  };
+
+  //  Загружаем данные с сервера и инициируем отрисовку фотографии других пользователей.
+
+  window.backend.load(successLoadHandler, errorLoadHandler);
 
 })();

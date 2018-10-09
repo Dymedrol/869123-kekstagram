@@ -2,7 +2,7 @@
 
 (function () {
 
-  // Генерирует карточку с фотографией случайноного пользователя
+  // Генерирует карточку с фотографией пользователя
 
   var renderCard = function (cards) {
     var picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -23,10 +23,13 @@
     return pictureCards;
   };
 
-  // Получаем данные картинок др. пользователей, записываем в глобальную переменную "otherUsersPictures"
+  // Назначение ID елементам галереии
 
-  window.otherUsersPictures = window.getCards();
-
+  window.getId = function (elements) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].id = i;
+    }
+  };
   // инициирование фотографии др. пользователей
 
   window.initOtherUsersPictures = function () {

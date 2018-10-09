@@ -2,15 +2,6 @@
 
 (function () {
 
-  var COMMENTS = [
-    'Всё отлично!',
-    'В целом всё неплохо. Но не всё.',
-    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-  ];
-
   var DESCRIPTIONS = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',
@@ -20,33 +11,20 @@
     'Вот это тачка!'
   ];
 
-  var PICTURES_AMOUNT = 25;
-  var LIKES_MIN_AMOUNT = 15;
-  var LIKES_MAX_AMOUNT = 200;
+  window.otherUsersPictures = [];
 
-  // Возвращает массив "комментариев", с количеством элементов commentAmount.
-
-  var getComments = function (commentAmount) {
-    var commentsList = [];
-    for (var i = 0; i < commentAmount; i++) {
-      commentsList[i] = COMMENTS[window.getRandonNumber(0, COMMENTS.length - 1)];
-    }
-    return commentsList;
-  };
-
-  // Возвращает массив картинок случайных пользователей
-
-  window.getCards = function () {
+  window.getCards = function (inputData) {
     var pictures = [];
-    for (var i = 1; i <= PICTURES_AMOUNT; i++) {
+    for (var i = 0; i < inputData.length; i++) {
       pictures.push({
-        url: 'photos/' + i + '.jpg',
-        likes: window.getRandonNumber(LIKES_MIN_AMOUNT, LIKES_MAX_AMOUNT),
-        comments: getComments(window.getRandonNumber(1, 6)),
+        url: inputData[i].url,
+        likes: inputData[i].likes,
+        comments: inputData[i].comments,
         description: DESCRIPTIONS[window.getRandonNumber(0, DESCRIPTIONS.length - 1)]
       });
     }
-    return pictures;
+
+    window.otherUsersPictures = pictures;
   };
 
 })();
