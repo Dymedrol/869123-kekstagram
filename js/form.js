@@ -79,16 +79,18 @@
 
   var main = document.querySelector('main');
 
-  var successWindow = document.querySelector('#success').content.querySelector('.success');
-  var errorWindow = document.querySelector('#error').content.querySelector('.error');
+  var successWindowTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorWindowTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var successHandler = function () {
+    var successWindow = successWindowTemplate.cloneNode(true);
     main.appendChild(successWindow);
     imgUploadOverlay.classList.add('hidden');
     imgUploadInput.value = '';
   };
 
   var errorHandler = function () {
+    var errorWindow = errorWindowTemplate.cloneNode(true);
     main.appendChild(errorWindow);
   };
 
@@ -97,7 +99,7 @@
 
     for (var i = 0; i < inputs.length; i++) {
       if (!inputs[i].validity.valid) {
-        main.appendChild(errorWindow);
+        main.appendChild(errorWindowTemplate);
       } else {
         window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
       }

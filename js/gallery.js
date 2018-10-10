@@ -27,7 +27,7 @@
 
   window.getId = function (elements) {
     for (var i = 0; i < elements.length; i++) {
-      elements[i].id = i;
+      elements[i].setAttribute('data-id', i);
     }
   };
   // инициирование фотографии др. пользователей

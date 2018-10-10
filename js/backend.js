@@ -2,8 +2,8 @@
 
 (function () {
 
-  var LOAD_URL = 'https://js.dump.academy/kekstagram/data';
-  var SAVE_URL = 'https://js.dump.academy/kekstagram';
+  var LOADING_URL = 'https://js.dump.academy/kekstagram/data';
+  var SAVING_URL = 'https://js.dump.academy/kekstagram';
   var REQUEST_STATUS_OK = 200;
 
   var load = function (onLoad, onError) {
@@ -18,7 +18,7 @@
       }
     });
 
-    xhr.open('GET', LOAD_URL);
+    xhr.open('GET', LOADING_URL);
     xhr.send();
   };
 
@@ -34,7 +34,7 @@
       }
     });
 
-    xhr.open('post', SAVE_URL);
+    xhr.open('post', SAVING_URL);
     xhr.send(data);
   };
 
