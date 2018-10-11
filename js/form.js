@@ -54,21 +54,28 @@
 
   var imgUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
   var imgUploadPreviewCurentClass = 'effects__preview--none';
+  var lastTimeout;
 
   var effectChangeHandler = function (evt) {
     var currentValue = evt.target.value;
 
-    if (currentValue === 'none') {
-      effectLevelLine.classList.add('hidden');
-    } else {
-      effectLevelLine.classList.remove('hidden');
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
     }
 
-    resetEffects();
-    effectIntensionLevel = 100;
-    imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
-    imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
-    imgUploadPreview.classList.add(imgUploadPreviewCurentClass);
+    lastTimeout = window.setTimeout(function () {
+      if (currentValue === 'none') {
+        effectLevelLine.classList.add('hidden');
+      } else {
+        effectLevelLine.classList.remove('hidden');
+      }
+
+      resetEffects();
+      effectIntensionLevel = 100;
+      imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
+      imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
+      imgUploadPreview.classList.add(imgUploadPreviewCurentClass);
+    }, 500);
   };
 
   document.querySelectorAll('input[name="effect"]').forEach(function (input) {

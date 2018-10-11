@@ -1,6 +1,16 @@
 'use strict';
 
 (function () {
+  var NEW_PICTURES_AMOUNT = 10;
+
+  var imgFilters = document.querySelector('.img-filters');
+
+  var popularButton = document.querySelector('#filter-popular');
+  var newButton = document.querySelector('#filter-new');
+  var discussedButton = document.querySelector('#filter-discussed');
+
+  var loadedImages;
+  var filtredImages;
 
   var getCards = function (inputData) {
     var pictures = [];
@@ -16,7 +26,11 @@
     window.otherUsersPictures = pictures;
   };
 
+  // При удачной загрузке данных отрисовываем галлерею
+
   var successLoadHandler = function (data) {
+    loadedImages = data;
+    imgFilters.classList.remove('img-filters--inactive');
     getCards(data);
     window.initOtherUsersPictures();
     var picturesListElements = window.picturesList.querySelectorAll('a');
@@ -26,6 +40,81 @@
 
   var errorLoadHandler = function () {
 
+  };
+
+  // Хэндлера нажатия на фильтры
+
+  var filtersClickHandler = function (evt) {
+    var pics = window.picturesList.querySelectorAll('.picture');
+
+    for (var i = 0; i < pics.length; i++) {
+      window.picturesList.removeChild(pics[i]);
+    }
+
+    if (evt.target.id === 'filter-popular') {
+      getPopularPictures();
+
+    } else if (evt.target.id === 'filter-new') {
+      getNewPictures();
+
+    } else if (evt.target.id === 'filter-discussed') {
+      getDiscussedPictures();
+    }
+
+  };
+
+  // При нажатии на "популярные"
+
+  var getPopularPictures = function () {
+    popularButton.classList.add('img-filters__button--active');
+    newButton.classList.remove('img-filters__button--active');
+    discussedButton.classList.remove('img-filters__button--active');
+    getCards(loadedImages);
+    window.initOtherUsersPictures();
+  };
+
+  // При нажатии на "новые"
+
+  var getNewPictures = function () {
+    newButton.classList.add('img-filters__button--active');
+    popularButton.classList.remove('img-filters__button--active');
+    discussedButton.classList.remove('img-filters__button--active');
+
+    filtredImages = [];
+
+    for (var i = 0; i < NEW_PICTURES_AMOUNT; i++) {
+      filtredImages[i] = loadedImages[window.getRandonNumber(0, loadedImages.length - 1)];
+    }
+
+    getCards(filtredImages);
+    window.initOtherUsersPictures();
+  };
+
+  // при нажатии на "Обсуждаемые"
+
+  var getDiscussedPictures = function () {
+    discussedButton.classList.add('img-filters__button--active');
+    newButton.classList.remove('img-filters__button--active');
+    popularButton.classList.remove('img-filters__button--active');
+
+    filtredImages = [];
+
+    var sortPicsByComments = function (picA, picB) {
+
+      if (picA.comments.length < picB.comments.length) {
+        return 1;
+      } else if (picA.comments.length > picB.comments.length) {
+        return -1;
+      } else {
+        return 0;
+      }
+    };
+
+    filtredImages = loadedImages.slice();
+    filtredImages.sort(sortPicsByComments);
+
+    getCards(filtredImages);
+    window.initOtherUsersPictures();
   };
 
   // Установка листенера. Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
@@ -52,4 +141,5 @@
 
   window.backend.load(successLoadHandler, errorLoadHandler);
 
+  imgFilters.addEventListener('click', filtersClickHandler);
 })();
