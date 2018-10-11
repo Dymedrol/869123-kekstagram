@@ -17,3 +17,10 @@ window.getFragment = function (elements) {
   }
   return fragment;
 };
+
+window.showError = function () {
+  var errorWindowTemplate = document.querySelector('#error').content.querySelector('.error');
+  var errorWindow = errorWindowTemplate.cloneNode(true);
+  window.main.appendChild(errorWindow);
+};
+

@@ -34,30 +34,33 @@
     getCards(data);
     window.initOtherUsersPictures();
     var picturesListElements = window.picturesList.querySelectorAll('a');
+
     window.getId(picturesListElements);
     setOpenBigPictureListener();
   };
 
   var errorLoadHandler = function () {
-
+    window.showError();
   };
 
   // Хэндлера нажатия на фильтры
 
   var filtersClickHandler = function (evt) {
     var pics = window.picturesList.querySelectorAll('.picture');
-
+    if (evt.target.type !== 'button') {
+      return;
+    }
     for (var i = 0; i < pics.length; i++) {
       window.picturesList.removeChild(pics[i]);
     }
 
     switch (evt.target.id) {
-      case 'filter-popular': getPopularPictures()
-      break
-      case 'filter-new': getNewPictures()
-      break
-      case 'filter-discussed': getDiscussedPictures()
-    };
+      case 'filter-popular': getPopularPictures();
+        break;
+      case 'filter-new': getNewPictures();
+        break;
+      case 'filter-discussed': getDiscussedPictures();
+    }
 
     getCards(filtredImages);
     window.initOtherUsersPictures();
@@ -124,11 +127,11 @@
       while (!target.classList.contains('picture')) {
         target = target.parentNode;
         if (target.classList.contains('pictures')) {
-          event.stopPropagation();
+          evt.stopPropagation();
           return;
         }
       }
-      event.stopPropagation();
+      evt.stopPropagation();
       var id = target.getAttribute('data-id');
       window.initBigPicture(window.otherUsersPictures[id]);
 

@@ -3,17 +3,35 @@
 (function () {
 
   window.bigPicture = document.querySelector('.big-picture');
+  var body = document.querySelector('body');
 
   window.initBigPicture = function (card) {
     // Показываем элемент .big-picture
     window.bigPicture.classList.remove('hidden');
+    body.classList.add('modal-open');
+
+    var closeBigPicture = function () {
+      window.bigPicture.classList.add('hidden');
+      body.classList.remove('modal-open');
+      document.querySelector('.social__comments').innerHTML = '';
+      document.removeEventListener('keydown', closeBigPicture);
+    };
 
     // Закрываем элемент .big-picture по клику на крестик
     var bigPictureCancel = document.querySelector('.big-picture__cancel');
     bigPictureCancel.addEventListener('click', function () {
-      window.bigPicture.classList.add('hidden');
-      document.querySelector('.social__comments').innerHTML = '';
+      closeBigPicture();
     });
+
+    // Закрываем элемент .big-picture по нажатию ESC
+
+    var bigPictureEscPressHandlrer = function () {
+      closeBigPicture();
+    };
+
+    document.addEventListener('keydown', bigPictureEscPressHandlrer);
+
+
     // Заполняем данными
     window.bigPicture.querySelector('img').src = card.url;
     window.bigPicture.querySelector('.likes-count').textContent = card.likes;
@@ -25,7 +43,7 @@
 
       var socialComments = [];
 
-      for (var i = 0; i < comments.length; i++) {
+      for (var i = 0; i < 5; i++) {
         var socialComment = document.createElement('li');
         socialComment.classList.add('social__comment');
         var picture = document.createElement('img');
