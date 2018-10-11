@@ -51,16 +51,18 @@
       window.picturesList.removeChild(pics[i]);
     }
 
-    if (evt.target.id === 'filter-popular') {
-      getPopularPictures();
+    switch (evt.target.id) {
+      case 'filter-popular': getPopularPictures()
+      break
+      case 'filter-new': getNewPictures()
+      break
+      case 'filter-discussed': getDiscussedPictures()
+    };
 
-    } else if (evt.target.id === 'filter-new') {
-      getNewPictures();
-
-    } else if (evt.target.id === 'filter-discussed') {
-      getDiscussedPictures();
-    }
-
+    getCards(filtredImages);
+    window.initOtherUsersPictures();
+    var picturesListElements = window.picturesList.querySelectorAll('a');
+    window.getId(picturesListElements);
   };
 
   // При нажатии на "популярные"
@@ -69,8 +71,10 @@
     popularButton.classList.add('img-filters__button--active');
     newButton.classList.remove('img-filters__button--active');
     discussedButton.classList.remove('img-filters__button--active');
-    getCards(loadedImages);
-    window.initOtherUsersPictures();
+
+    filtredImages = [];
+    filtredImages = loadedImages.slice();
+
   };
 
   // При нажатии на "новые"
@@ -85,9 +89,6 @@
     for (var i = 0; i < NEW_PICTURES_AMOUNT; i++) {
       filtredImages[i] = loadedImages[window.getRandonNumber(0, loadedImages.length - 1)];
     }
-
-    getCards(filtredImages);
-    window.initOtherUsersPictures();
   };
 
   // при нажатии на "Обсуждаемые"
@@ -105,16 +106,13 @@
         return 1;
       } else if (picA.comments.length > picB.comments.length) {
         return -1;
-      } else {
-        return 0;
       }
+      return 0;
+
     };
 
     filtredImages = loadedImages.slice();
     filtredImages.sort(sortPicsByComments);
-
-    getCards(filtredImages);
-    window.initOtherUsersPictures();
   };
 
   // Установка листенера. Нажатие на фотографию приводит к показу фотографии в полноэкранном режиме
