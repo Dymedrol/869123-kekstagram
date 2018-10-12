@@ -12,7 +12,6 @@
   };
 
   // создает набор карточек с фотографиями случайнных пользователей
-
   var renderCards = function (pictures) {
     var pictureCards = [];
     for (var i = 0; i < pictures.length; i++) {
@@ -22,16 +21,14 @@
   };
 
   // Назначение ID елементам галереии
-
   window.getId = function (elements) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].setAttribute('data-id', i);
     }
   };
-  // инициирование фотографии др. пользователей
 
+  // инициирование фотографии др. пользователей
   window.initOtherUsersPictures = function () {
     window.picturesList.appendChild(window.getFragment(renderCards(window.otherUsersPictures)));
   };
-
 })();

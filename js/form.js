@@ -2,6 +2,8 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var STEP = 25;
+  var EFFECT_LEVEL_LINE = 453;
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -17,7 +19,7 @@
   effectLevelValue.value = 100;
 
   effectLevelLine.classList.add('hidden');
-  var imgUploadPreviewCurentClass = 'effects__preview--none';
+  var imgUploadPreviewCurrentClass = 'effects__preview--none';
   var currentValue = 'none';
 
   // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
@@ -25,26 +27,25 @@
 
   uploadFile.addEventListener('change', function () {
     imgUploadOverlay.classList.remove('hidden');
-    scaleLevel = 100;
     scaleInput.value = scaleLevel + '%';
     changeScale(scaleLevel);
     document.addEventListener('keydown', closeImgUploadOverlayHandler);
   });
 
   // функция сброса формы загрузки
-
   var resetPictureEdition = function () {
+    scaleLevel = 100;
     imgUploadInput.value = '';
     textHashtags.value = '';
     textDescription.value = '';
-    imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
-    imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
-    imgUploadPreviewCurentClass = 'effects__preview--none';
+    imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
+    imgUploadPreview.classList.remove(imgUploadPreviewCurrentClass);
+    imgUploadPreviewCurrentClass = 'effects__preview--none';
     effectLevelLine.classList.add('hidden');
     resetEffects();
   };
-  // функция закрытия формы редактирования изображения
 
+  // функция закрытия формы редактирования изображения
   var closePictureEdition = function () {
     imgUploadOverlay.classList.add('hidden');
     resetPictureEdition();
@@ -72,7 +73,6 @@
   };
 
   // Применение эффекта для изображения
-
   var imgUploadPreview = document.querySelector('.img-upload__preview img');
 
   var effectChangeHandler = function (evt) {
@@ -86,9 +86,9 @@
       }
       resetEffects();
       effectIntensionLevel = 100;
-      imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
-      imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
-      imgUploadPreview.classList.add(imgUploadPreviewCurentClass);
+      imgUploadPreview.classList.remove(imgUploadPreviewCurrentClass);
+      imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
+      imgUploadPreview.classList.add(imgUploadPreviewCurrentClass);
     };
 
     window.debounce(changeEffect);
@@ -99,17 +99,14 @@
   });
 
   // Проверка Хэш-тегов
-
   var hashtagInput = document.querySelector('.text__hashtags');
 
   hashtagInput.addEventListener('change', function () {
     hashtagInput.setCustomValidity('');
     var value = hashtagInput.value;
-
     value = value.replace(/\s+/g, ' ');
     value = value.trim();
     var hashtags = value.split(' ');
-
     var obj = {};
 
     for (var i = 0; i < hashtags.length; i++) {
@@ -128,13 +125,11 @@
 
 
   // Открытие сообщения об отправке
-
   window.main = document.querySelector('main');
 
   var successWindowTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var successHandler = function () {
-
     var closeSuccessWindow = function () {
       window.main.removeChild(successWindow);
     };
@@ -175,9 +170,7 @@
     evt.preventDefault();
     var inputs = evt.target.querySelectorAll('input');
 
-
     for (var i = 0; i < inputs.length; i++) {
-
       if (!inputs[i].validity.valid) {
         inputs[i].setCustomValidity('Ошибочка!!!');
         inputs[i].style.color = 'red';
@@ -195,11 +188,8 @@
   imgUploadSubmit.addEventListener('submit', submitHandler);
 
   // Изменение маштаб изображения
-
   var minusButton = document.querySelector('.scale__control--smaller');
   var plusButton = document.querySelector('.scale__control--bigger');
-  var STEP = 25;
-
 
   var changeScale = function (scaleValue) {
     scaleInput.value = scaleValue + '%';
@@ -227,40 +217,33 @@
   plusButton.addEventListener('click', plusClickHandler);
 
   // Работа слайдера, задает глубину эффекта
-
-  var EFFECT_LEVEL_LINE = 453;
   var effectIntensionLevel = 100;
   var effectLevelPin = document.querySelector('.effect-level__pin');
 
-
   effectLevelPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-
-    var startCoordsX = evt.clientX;
+    var startСoordinateX = evt.clientX;
 
     var LevelPinMouseMoveHandler = function (moveEvt) {
-
       moveEvt.preventDefault();
-      var shift = startCoordsX - moveEvt.clientX;
-      startCoordsX = moveEvt.clientX;
-      var curentCoords = (effectLevelPin.offsetLeft - shift);
+      var shift = startСoordinateX - moveEvt.clientX;
+      startСoordinateX = moveEvt.clientX;
+      var curentСoordinate = effectLevelPin.offsetLeft - shift;
 
-      if (curentCoords <= 0) {
+      if (curentСoordinate <= 0) {
         effectLevelPin.style.left = '0';
-      } else if (curentCoords >= EFFECT_LEVEL_LINE) {
+      } else if (curentСoordinate >= EFFECT_LEVEL_LINE) {
         effectLevelPin.style.left = EFFECT_LEVEL_LINE + 'px';
       } else {
-        effectLevelPin.style.left = curentCoords + 'px';
+        effectLevelPin.style.left = curentСoordinate + 'px';
       }
 
-      var pinPosition = (getComputedStyle(effectLevelPin));
-
+      var pinPosition = getComputedStyle(effectLevelPin);
       effectIntensionLevel = Math.round((parseInt(pinPosition.left, 10) * 100) / EFFECT_LEVEL_LINE);
-
       effectLevelDepth.style.width = effectIntensionLevel + '%';
       effectLevelValue.value = effectIntensionLevel;
 
-      switch (imgUploadPreviewCurentClass) {
+      switch (imgUploadPreviewCurrentClass) {
         case 'effects__preview--chrome': imgUploadPreview.style.filter = 'grayscale(' + (effectIntensionLevel / 100) + ')';
           break;
         case 'effects__preview--sepia': imgUploadPreview.style.filter = 'sepia(' + (effectIntensionLevel / 100) + ')';
@@ -276,7 +259,6 @@
 
     var levelPinMouseUpHandler = function (moveUpEvt) {
       moveUpEvt.preventDefault();
-
       document.removeEventListener('mousemove', LevelPinMouseMoveHandler);
       document.removeEventListener('mouseup', levelPinMouseUpHandler);
     };
@@ -284,5 +266,4 @@
     document.addEventListener('mousemove', LevelPinMouseMoveHandler);
     document.addEventListener('mouseup', levelPinMouseUpHandler);
   });
-
 })();

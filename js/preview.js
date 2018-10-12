@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var MAX_COMMENT_AMOUNT = 5;
+  var MAX_COMMENTS_AMOUNT = 5;
 
   window.bigPicture = document.querySelector('.big-picture');
   var body = document.querySelector('body');
@@ -25,7 +25,6 @@
     });
 
     // Закрываем элемент .big-picture по нажатию ESC
-
     var bigPictureEscPressHandlrer = function () {
       closeBigPicture();
     };
@@ -40,11 +39,10 @@
 
     // генерирует элементы с комментариями
     var getBigPictureComment = function (comments) {
-
       var socialComments = [];
       var commentAmount = comments.length;
-      if (commentAmount > MAX_COMMENT_AMOUNT) {
-        commentAmount = MAX_COMMENT_AMOUNT;
+      if (commentAmount > MAX_COMMENTS_AMOUNT) {
+        commentAmount = MAX_COMMENTS_AMOUNT;
       }
 
       for (var i = 0; i < commentAmount; i++) {
@@ -52,7 +50,7 @@
         socialComment.classList.add('social__comment');
         var picture = document.createElement('img');
         picture.classList.add('social__picture');
-        picture.src = 'img/avatar-' + window.getRandonNumber(1, 6) + '.svg';
+        picture.src = 'img/avatar-' + window.getRandomNumber(1, 6) + '.svg';
         picture.alt = 'Аватар комментатора фотографии';
         socialComment.appendChild(picture);
         var socialText = document.createElement('p');
@@ -71,5 +69,4 @@
   document.querySelector('.social__comment-count').classList.add('visually-hidden');
   // убираем блоки загрузки новых комментариев
   document.querySelector('.comments-loader').classList.add('visually-hidden');
-
 })();

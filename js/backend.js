@@ -41,5 +41,4 @@
     load: load,
     save: save
   };
-
 })();
