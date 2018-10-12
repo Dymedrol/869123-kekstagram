@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var MAX_COMMENT_AMOUNT = 5;
 
   window.bigPicture = document.querySelector('.big-picture');
   var body = document.querySelector('body');
@@ -42,8 +43,12 @@
     var getBigPictureComment = function (comments) {
 
       var socialComments = [];
+      var commentAmount = comments.length;
+      if (commentAmount > MAX_COMMENT_AMOUNT) {
+        commentAmount = MAX_COMMENT_AMOUNT;
+      }
 
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < commentAmount; i++) {
         var socialComment = document.createElement('li');
         socialComment.classList.add('social__comment');
         var picture = document.createElement('img');

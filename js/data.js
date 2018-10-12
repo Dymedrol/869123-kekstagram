@@ -2,7 +2,7 @@
 
 (function () {
 
-  window.DESCRIPTIONS = [
+  window.descriptions = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',
     'Как же круто тут кормят',

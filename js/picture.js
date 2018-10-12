@@ -19,7 +19,7 @@
         url: inputData[i].url,
         likes: inputData[i].likes,
         comments: inputData[i].comments,
-        description: window.DESCRIPTIONS[window.getRandonNumber(0, window.DESCRIPTIONS.length - 1)]
+        description: window.descriptions[window.getRandonNumber(0, window.descriptions.length - 1)]
       });
     }
 

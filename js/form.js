@@ -99,18 +99,26 @@
   var hashtagInput = document.querySelector('.text__hashtags');
 
   hashtagInput.addEventListener('change', function () {
-    var hashtegs = hashtagInput.value;
-    var hashtegsArray = hashtegs.split(' ');
+    var value = hashtagInput.value;
 
-    for (var i = 0; i < hashtegsArray.length; i++) {
-      for (var j = i + 1; j < hashtegsArray.length; j++) {
-        if (hashtegsArray[i] === hashtegsArray[j]) {
-          hashtagInput.style.color = 'red';
-          hashtagInput.setCustomValidity('Одинаковые хэштеги!!!!');
-        } else {
-          hashtagInput.removeAttribute('style');
-        }
-      }
+
+    value = value.replace(/\s+/g, ' ');
+    value = value.trim();
+    var hashtags = value.split(' ');
+
+    var obj = {};
+
+    for (var i = 0; i < hashtags.length; i++) {
+      obj[hashtags[i]] = true;
+    }
+
+    var uniqueHashtagsAmount = Object.keys(obj).length;
+
+    if (uniqueHashtagsAmount !== hashtags.length) {
+      hashtagInput.style.color = 'red';
+      hashtagInput.setCustomValidity('Одинаковые хэштеги!!!!');
+    } else {
+      hashtagInput.removeAttribute('style');
     }
   });
 
