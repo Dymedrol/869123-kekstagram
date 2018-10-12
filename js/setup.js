@@ -1,4 +1,5 @@
 'use strict';
+var ESC_KEYCODE = 27;
 
 window.picturesList = document.querySelector('.pictures');
 
@@ -29,14 +30,14 @@ window.showError = function () {
   };
 
   var errorButtonClickHandler = function (evt) {
-    if ((evt.target === errorWindowPopUp) || (evt.target === errorButton)) {
+    if (evt.target === errorWindowPopUp || evt.target === errorButton) {
       closeErrorWindow();
       document.removeEventListener('click', errorButtonClickHandler);
     }
   };
 
   var errorButtonEscPressHandler = function (evt) {
-    if (evt.keyCode === window.ESC_KEYCODE) {
+    if (evt.keyCode === ESC_KEYCODE) {
       closeErrorWindow();
       document.removeEventListener('keydown', errorButtonEscPressHandler);
     }

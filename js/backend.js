@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var LOADING_URL = 'https://js.dump.academy/kekstagram/data';
   var SAVING_URL = 'https://js.dump.academy/kekstagram';
   var REQUEST_STATUS_OK = 200;

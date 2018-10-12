@@ -62,14 +62,14 @@
       case 'filter-discussed': getDiscussedPictures();
     }
 
-    var changeFiltre = function () {
+    var changeFilter = function () {
       getCards(filtredImages);
       window.initOtherUsersPictures();
       var picturesListElements = window.picturesList.querySelectorAll('a');
       window.getId(picturesListElements);
     };
 
-    window.debounce(changeFiltre);
+    window.debounce(changeFilter);
   };
 
   // При нажатии на "популярные"

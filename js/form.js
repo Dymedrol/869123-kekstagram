@@ -1,8 +1,7 @@
 'use strict';
 
 (function () {
-
-  window.ESC_KEYCODE = 27;
+  var ESC_KEYCODE = 27;
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -32,10 +31,9 @@
     document.addEventListener('keydown', closeImgUploadOverlayHandler);
   });
 
-  // функция закрытия формы редактирования изображения
+  // функция сброса формы загрузки
 
-  var closePictureEdition = function () {
-    imgUploadOverlay.classList.add('hidden');
+  var resetPictureEdition = function () {
     imgUploadInput.value = '';
     textHashtags.value = '';
     textDescription.value = '';
@@ -44,12 +42,18 @@
     imgUploadPreviewCurentClass = 'effects__preview--none';
     effectLevelLine.classList.add('hidden');
     resetEffects();
+  };
+  // функция закрытия формы редактирования изображения
+
+  var closePictureEdition = function () {
+    imgUploadOverlay.classList.add('hidden');
+    resetPictureEdition();
     document.removeEventListener('keydown', closeImgUploadOverlayHandler);
   };
 
   // Закрытие формы редактирования изображения по нажатию на кнопку ESC
   var closeImgUploadOverlayHandler = function (evt) {
-    if (evt.keyCode === window.ESC_KEYCODE && evt.target !== textHashtags && evt.target !== textDescription) {
+    if (evt.keyCode === ESC_KEYCODE && evt.target !== textHashtags && evt.target !== textDescription) {
       closePictureEdition();
     }
   };
@@ -69,7 +73,7 @@
 
   // Применение эффекта для изображения
 
-  var imgUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
+  var imgUploadPreview = document.querySelector('.img-upload__preview img');
 
   var effectChangeHandler = function (evt) {
     currentValue = evt.target.value;
@@ -99,8 +103,8 @@
   var hashtagInput = document.querySelector('.text__hashtags');
 
   hashtagInput.addEventListener('change', function () {
+    hashtagInput.setCustomValidity('');
     var value = hashtagInput.value;
-
 
     value = value.replace(/\s+/g, ' ');
     value = value.trim();
@@ -138,14 +142,14 @@
     var successButtonClickHandler = function (evt) {
       var popUp = document.querySelector('.success');
 
-      if ((evt.target === popUp) || (evt.target === successButton)) {
+      if (evt.target === popUp || evt.target === successButton) {
         closeSuccessWindow();
         document.removeEventListener('click', successButtonClickHandler);
       }
     };
 
     var successButtonEscPressHandler = function (evt) {
-      if (evt.keyCode === window.ESC_KEYCODE) {
+      if (evt.keyCode === ESC_KEYCODE) {
         closeSuccessWindow();
         document.removeEventListener('keydown', successButtonEscPressHandler);
       }
@@ -157,6 +161,7 @@
     window.main.appendChild(successWindow);
     imgUploadOverlay.classList.add('hidden');
     imgUploadInput.value = '';
+    resetPictureEdition();
 
     var successButton = document.querySelector('.success__button');
     document.addEventListener('click', successButtonClickHandler);
@@ -182,7 +187,7 @@
       }
     }
     window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
-    return;
+
   };
 
   var imgUploadSubmit = document.querySelector('.img-upload__form');
@@ -199,7 +204,6 @@
   var changeScale = function (scaleValue) {
     scaleInput.value = scaleValue + '%';
     imgUploadPreview.parentNode.style.transform = 'scale(' + scaleValue / 100 + ')';
-
   };
 
   var minusClickHandler = function () {
@@ -242,9 +246,9 @@
       var curentCoords = (effectLevelPin.offsetLeft - shift);
 
       if (curentCoords <= 0) {
-        effectLevelPin.style.left = 0;
+        effectLevelPin.style.left = '0';
       } else if (curentCoords >= EFFECT_LEVEL_LINE) {
-        effectLevelPin.style.left = EFFECT_LEVEL_LINE;
+        effectLevelPin.style.left = EFFECT_LEVEL_LINE + 'px';
       } else {
         effectLevelPin.style.left = curentCoords + 'px';
       }

@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   window.descriptions = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',

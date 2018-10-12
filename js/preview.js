@@ -32,11 +32,10 @@
 
     document.addEventListener('keydown', bigPictureEscPressHandlrer);
 
-
     // Заполняем данными
     window.bigPicture.querySelector('img').src = card.url;
-    window.bigPicture.querySelector('.likes-count').textContent = card.likes;
-    window.bigPicture.querySelector('.comments-count').textContent = card.comments.length;
+    window.bigPicture.querySelector('.likes-count').textContent = String(card.likes);
+    window.bigPicture.querySelector('.comments-count').textContent = String(card.comments.length);
     window.bigPicture.querySelector('.social__caption').textContent = card.description;
 
     // генерирует элементы с комментариями
