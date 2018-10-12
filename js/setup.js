@@ -36,10 +36,10 @@ window.showError = function () {
   };
 
   var errorButtonEscPressHandler = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === window.ESC_KEYCODE) {
       closeErrorWindow();
       document.removeEventListener('keydown', errorButtonEscPressHandler);
-    };
+    }
   };
 
   document.addEventListener('keydown', errorButtonEscPressHandler);

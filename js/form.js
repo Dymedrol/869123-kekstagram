@@ -2,7 +2,7 @@
 
 (function () {
 
-  var ESC_KEYCODE = 27;
+  window.ESC_KEYCODE = 27;
 
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -49,7 +49,7 @@
 
   // Закрытие формы редактирования изображения по нажатию на кнопку ESC
   var closeImgUploadOverlayHandler = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && evt.target !== textHashtags && evt.target !== textDescription) {
+    if (evt.keyCode === window.ESC_KEYCODE && evt.target !== textHashtags && evt.target !== textDescription) {
       closePictureEdition();
     }
   };
@@ -98,24 +98,21 @@
 
   var hashtagInput = document.querySelector('.text__hashtags');
 
-  hashtagInput.addEventListener('change', function() {
-   console.log('изменение');
-   var hashtegs = hashtagInput.value;
-   var hashtegsArray = hashtegs.split(' ');
+  hashtagInput.addEventListener('change', function () {
+    var hashtegs = hashtagInput.value;
+    var hashtegsArray = hashtegs.split(' ');
 
-   for (var i = 0; i < hashtegsArray.length; i++) {
-     for (var j = i + 1; j < hashtegsArray.length; j++) {
-       if (hashtegsArray[i] === hashtegsArray[j]) {
-        console.log('Ошибка');
-        console.log(hashtagInput);
-        hashtagInput.style.color = 'red';
-        hashtagInput.setCustomValidity('Одинаковые хэштеги!!!!');
-       } else {
-         hashtagInput.removeAttribute('style');
-       }
-     }
-   }
-  })
+    for (var i = 0; i < hashtegsArray.length; i++) {
+      for (var j = i + 1; j < hashtegsArray.length; j++) {
+        if (hashtegsArray[i] === hashtegsArray[j]) {
+          hashtagInput.style.color = 'red';
+          hashtagInput.setCustomValidity('Одинаковые хэштеги!!!!');
+        } else {
+          hashtagInput.removeAttribute('style');
+        }
+      }
+    }
+  });
 
 
   // Открытие сообщения об отправке
@@ -140,10 +137,10 @@
     };
 
     var successButtonEscPressHandler = function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
+      if (evt.keyCode === window.ESC_KEYCODE) {
         closeSuccessWindow();
         document.removeEventListener('keydown', successButtonEscPressHandler);
-      };
+      }
     };
 
     document.addEventListener('keydown', successButtonEscPressHandler);
@@ -165,14 +162,12 @@
     evt.preventDefault();
     var inputs = evt.target.querySelectorAll('input');
 
-    console.log(inputs);
+
     for (var i = 0; i < inputs.length; i++) {
 
-
-
       if (!inputs[i].validity.valid) {
-        !inputs[i].setCustomValidity('Ошибочка!!!');
-        inputs[i].style.color = "red";
+        inputs[i].setCustomValidity('Ошибочка!!!');
+        inputs[i].style.color = 'red';
         return;
       } else {
         inputs[i].removeAttribute('style');
