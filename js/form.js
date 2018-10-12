@@ -90,7 +90,6 @@
       imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
       imgUploadPreview.classList.add(imgUploadPreviewCurrentClass);
     };
-
     window.debounce(changeEffect);
   };
 
@@ -180,7 +179,6 @@
       }
     }
     window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
-
   };
 
   var imgUploadSubmit = document.querySelector('.img-upload__form');
@@ -213,7 +211,6 @@
   };
 
   minusButton.addEventListener('click', minusClickHandler);
-
   plusButton.addEventListener('click', plusClickHandler);
 
   // Работа слайдера, задает глубину эффекта
@@ -222,20 +219,20 @@
 
   effectLevelPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    var startСoordinateX = evt.clientX;
+    var startCoordinateX = evt.clientX;
 
     var LevelPinMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
-      var shift = startСoordinateX - moveEvt.clientX;
-      startСoordinateX = moveEvt.clientX;
-      var curentСoordinate = effectLevelPin.offsetLeft - shift;
+      var shift = startCoordinateX - moveEvt.clientX;
+      startCoordinateX = moveEvt.clientX;
+      var currentCoordinate = effectLevelPin.offsetLeft - shift;
 
-      if (curentСoordinate <= 0) {
+      if (currentCoordinate <= 0) {
         effectLevelPin.style.left = '0';
-      } else if (curentСoordinate >= EFFECT_LEVEL_LINE) {
+      } else if (currentCoordinate >= EFFECT_LEVEL_LINE) {
         effectLevelPin.style.left = EFFECT_LEVEL_LINE + 'px';
       } else {
-        effectLevelPin.style.left = curentСoordinate + 'px';
+        effectLevelPin.style.left = currentCoordinate + 'px';
       }
 
       var pinPosition = getComputedStyle(effectLevelPin);
