@@ -62,10 +62,14 @@
       case 'filter-discussed': getDiscussedPictures();
     }
 
-    getCards(filtredImages);
-    window.initOtherUsersPictures();
-    var picturesListElements = window.picturesList.querySelectorAll('a');
-    window.getId(picturesListElements);
+    var changeFiltre = function () {
+      getCards(filtredImages);
+      window.initOtherUsersPictures();
+      var picturesListElements = window.picturesList.querySelectorAll('a');
+      window.getId(picturesListElements);
+    };
+
+    window.debounce(changeFiltre);
   };
 
   // При нажатии на "популярные"
@@ -88,9 +92,19 @@
     discussedButton.classList.remove('img-filters__button--active');
 
     filtredImages = [];
+    var newImages = loadedImages.slice();
+    var randomImages = [];
+    var getRandomPictures = function (pictures) {
+      for (var i = 0; i < newImages.length; i++) {
+        var index = window.getRandonNumber(0, pictures.length - 1);
+        randomImages[i] = pictures[index];
+        pictures.splice(index, 1);
+      }
+    };
+    getRandomPictures(newImages);
 
     for (var i = 0; i < NEW_PICTURES_AMOUNT; i++) {
-      filtredImages[i] = loadedImages[window.getRandonNumber(0, loadedImages.length - 1)];
+      filtredImages[i] = randomImages[i];
     }
   };
 

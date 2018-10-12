@@ -70,28 +70,24 @@
   // Применение эффекта для изображения
 
   var imgUploadPreview = document.querySelector('.img-upload__preview').querySelector('img');
-  var lastTimeout;
 
   var effectChangeHandler = function (evt) {
     currentValue = evt.target.value;
 
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-
-    lastTimeout = window.setTimeout(function () {
+    var changeEffect = function () {
       if (currentValue === 'none') {
         effectLevelLine.classList.add('hidden');
       } else {
         effectLevelLine.classList.remove('hidden');
       }
-
       resetEffects();
       effectIntensionLevel = 100;
       imgUploadPreview.classList.remove(imgUploadPreviewCurentClass);
       imgUploadPreviewCurentClass = 'effects__preview--' + currentValue;
       imgUploadPreview.classList.add(imgUploadPreviewCurentClass);
-    }, 500);
+    };
+
+    window.debounce(changeEffect);
   };
 
   document.querySelectorAll('input[name="effect"]').forEach(function (input) {
@@ -100,23 +96,26 @@
 
   // Проверка Хэш-тегов
 
-  // var hashtagInput = document.querySelector('.text__hashtags');
+  var hashtagInput = document.querySelector('.text__hashtags');
 
-  // hashtagInput.addEventListener('change', function() {
-  //  console.log('изменение');
-  //  var hashtegs = hashtagInput.value;
-  //  var hashtegsArray = hashtegs.split(' ');
+  hashtagInput.addEventListener('change', function() {
+   console.log('изменение');
+   var hashtegs = hashtagInput.value;
+   var hashtegsArray = hashtegs.split(' ');
 
-  //  for (var i = 0; i < hashtegsArray.length; i++) {
-  //    for (var j = i + 1; j < hashtegsArray.length; j++) {
-  //      if (hashtegsArray[i] === hashtegsArray[j]) {
-  //        hashtagInput.setCustomValidity('Что-то не так с хэштегом');
-  //        hashtagInput.validity = false;
-  //        console.log(hashtagInput.validity);
-  //      };
-  //    }
-  //  }
-  // })
+   for (var i = 0; i < hashtegsArray.length; i++) {
+     for (var j = i + 1; j < hashtegsArray.length; j++) {
+       if (hashtegsArray[i] === hashtegsArray[j]) {
+        console.log('Ошибка');
+        console.log(hashtagInput);
+        hashtagInput.style.color = 'red';
+        hashtagInput.setCustomValidity('Одинаковые хэштеги!!!!');
+       } else {
+         hashtagInput.removeAttribute('style');
+       }
+     }
+   }
+  })
 
 
   // Открытие сообщения об отправке
@@ -126,10 +125,36 @@
   var successWindowTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var successHandler = function () {
+
+    var closeSuccessWindow = function () {
+      window.main.removeChild(successWindow);
+    };
+
+    var successButtonClickHandler = function (evt) {
+      var popUp = document.querySelector('.success');
+
+      if ((evt.target === popUp) || (evt.target === successButton)) {
+        closeSuccessWindow();
+        document.removeEventListener('click', successButtonClickHandler);
+      }
+    };
+
+    var successButtonEscPressHandler = function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        closeSuccessWindow();
+        document.removeEventListener('keydown', successButtonEscPressHandler);
+      };
+    };
+
+    document.addEventListener('keydown', successButtonEscPressHandler);
+
     var successWindow = successWindowTemplate.cloneNode(true);
     window.main.appendChild(successWindow);
     imgUploadOverlay.classList.add('hidden');
     imgUploadInput.value = '';
+
+    var successButton = document.querySelector('.success__button');
+    document.addEventListener('click', successButtonClickHandler);
   };
 
   var errorHandler = function () {
@@ -137,16 +162,24 @@
   };
 
   var submitHandler = function (evt) {
+    evt.preventDefault();
     var inputs = evt.target.querySelectorAll('input');
 
+    console.log(inputs);
     for (var i = 0; i < inputs.length; i++) {
+
+
+
       if (!inputs[i].validity.valid) {
-        window.showError();
+        !inputs[i].setCustomValidity('Ошибочка!!!');
+        inputs[i].style.color = "red";
         return;
       } else {
-        window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
+        inputs[i].removeAttribute('style');
       }
     }
+    window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
+    return;
   };
 
   var imgUploadSubmit = document.querySelector('.img-upload__form');
