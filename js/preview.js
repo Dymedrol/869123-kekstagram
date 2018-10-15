@@ -43,13 +43,8 @@
 
     // генерирует элементы с комментариями
     var getBigPictureComment = function (comments) {
-      var socialComments = [];
-      var commentAmount = comments.length;
-      if (commentAmount > MAX_COMMENTS_AMOUNT) {
-        commentAmount = MAX_COMMENTS_AMOUNT;
-      }
 
-      socialComments = comments.slice(0, MAX_COMMENTS_AMOUNT).map(function (element) {
+      var socialComments = comments.slice(0, MAX_COMMENTS_AMOUNT).map(function (element) {
         var socialComment = document.createElement('li');
         socialComment.classList.add('social__comment');
         var picture = document.createElement('img');

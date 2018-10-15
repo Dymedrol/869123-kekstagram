@@ -10,7 +10,7 @@
   var filtredImages;
 
   var getCards = function (inputData) {
-    var pictures = inputData.map(function (element) {
+    window.otherUsersPictures = inputData.map(function (element) {
       return {
         url: element.url,
         likes: element.likes,
@@ -18,8 +18,6 @@
         description: window.descriptions[window.setup.getRandomNumber(0, window.descriptions.length - 1)]
       };
     });
-
-    window.otherUsersPictures = pictures;
   };
 
   // При удачной загрузке данных отрисовываем галлерею
