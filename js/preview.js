@@ -6,6 +6,7 @@
 
   window.bigPicture = document.querySelector('.big-picture');
   var body = document.querySelector('body');
+  var commentBlock = document.querySelector('.social__comments');
 
   window.initBigPicture = function (card) {
     // Показываем элемент .big-picture
@@ -15,7 +16,7 @@
     var closeBigPicture = function () {
       window.bigPicture.classList.add('hidden');
       body.classList.remove('modal-open');
-      document.querySelector('.social__comments').innerHTML = '';
+      commentBlock.innerHTML = '';
       document.removeEventListener('keydown', closeBigPicture);
     };
 
@@ -48,24 +49,25 @@
         commentAmount = MAX_COMMENTS_AMOUNT;
       }
 
-      for (var i = 0; i < commentAmount; i++) {
+      socialComments = comments.slice(0, MAX_COMMENTS_AMOUNT).map(function (element) {
         var socialComment = document.createElement('li');
         socialComment.classList.add('social__comment');
         var picture = document.createElement('img');
         picture.classList.add('social__picture');
-        picture.src = 'img/avatar-' + window.getRandomNumber(1, 6) + '.svg';
+        picture.src = 'img/avatar-' + window.setup.getRandomNumber(1, 6) + '.svg';
         picture.alt = 'Аватар комментатора фотографии';
         socialComment.appendChild(picture);
         var socialText = document.createElement('p');
         socialText.classList.add('social__text');
-        socialText.textContent = comments[i];
+        socialText.textContent = element;
         socialComment.appendChild(socialText);
-        socialComments.push(socialComment);
-      }
-      return window.getFragment(socialComments);
+        return socialComment;
+      });
+
+      return window.setup.getFragment(socialComments);
     };
 
-    document.querySelector('.social__comments').appendChild(getBigPictureComment(card.comments));
+    commentBlock.appendChild(getBigPictureComment(card.comments));
   };
 
   // убираем блоки счётчика комментариев

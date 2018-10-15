@@ -10,15 +10,14 @@
   var filtredImages;
 
   var getCards = function (inputData) {
-    var pictures = [];
-    for (var i = 0; i < inputData.length; i++) {
-      pictures.push({
-        url: inputData[i].url,
-        likes: inputData[i].likes,
-        comments: inputData[i].comments,
-        description: window.descriptions[window.getRandomNumber(0, window.descriptions.length - 1)]
-      });
-    }
+    var pictures = inputData.map(function (element) {
+      return {
+        url: element.url,
+        likes: element.likes,
+        comments: element.comments,
+        description: window.descriptions[window.setup.getRandomNumber(0, window.descriptions.length - 1)]
+      };
+    });
 
     window.otherUsersPictures = pictures;
   };
@@ -28,25 +27,26 @@
     loadedImages = data;
     imgFilters.classList.remove('img-filters--inactive');
     getCards(data);
-    window.initOtherUsersPictures();
-    var picturesListElements = window.picturesList.querySelectorAll('a');
-    window.getId(picturesListElements);
+    window.gallery.initOtherUsersPictures();
+    var picturesListElements = window.setup.picturesList.querySelectorAll('a');
+    window.gallery.getId(picturesListElements);
     setOpenBigPictureListener();
   };
 
   var errorLoadHandler = function () {
-    window.showError();
+    window.setup.showError();
   };
 
   // Хэндлера нажатия на фильтры
   var filtersClickHandler = function (evt) {
-    var pics = window.picturesList.querySelectorAll('.picture');
+    var pics = window.setup.picturesList.querySelectorAll('.picture');
     if (evt.target.type !== 'button') {
       return;
     }
-    for (var i = 0; i < pics.length; i++) {
-      window.picturesList.removeChild(pics[i]);
-    }
+
+    pics.forEach(function (element) {
+      window.setup.picturesList.removeChild(element);
+    });
 
     switch (evt.target.id) {
       case 'filter-popular': getPopularPictures();
@@ -58,11 +58,11 @@
 
     var changeFilter = function () {
       getCards(filtredImages);
-      window.initOtherUsersPictures();
-      var picturesListElements = window.picturesList.querySelectorAll('a');
-      window.getId(picturesListElements);
+      window.gallery.initOtherUsersPictures();
+      var picturesListElements = window.setup.picturesList.querySelectorAll('a');
+      window.gallery.getId(picturesListElements);
     };
-    window.debounce(changeFilter);
+    window.setup.debounce(changeFilter);
   };
 
   // При нажатии на "популярные"
@@ -82,22 +82,21 @@
     filtredImages = [];
     var newImages = loadedImages.slice();
     var randomImages = [];
+
     var getRandomPictures = function (pictures) {
-      for (var i = 0; i < newImages.length; i++) {
-        var index = window.getRandomNumber(0, pictures.length - 1);
+      newImages.forEach(function (element, i) {
+        var index = window.setup.getRandomNumber(0, pictures.length - 1);
         randomImages[i] = pictures[index];
         pictures.splice(index, 1);
-      }
+      });
     };
+
     getRandomPictures(newImages);
 
-    for (var i = 0; i < NEW_PICTURES_AMOUNT; i++) {
-      filtredImages[i] = randomImages[i];
-    }
+    filtredImages = randomImages.slice(0, NEW_PICTURES_AMOUNT);
   };
 
   // при нажатии на "Обсуждаемые"
-
   var getDiscussedPictures = function () {
     discussedButton.classList.add('img-filters__button--active');
     newButton.classList.remove('img-filters__button--active');

@@ -22,6 +22,23 @@
   var imgUploadPreviewCurrentClass = 'effects__preview--none';
   var currentValue = 'none';
 
+  window.inputForm = {
+    main: document.querySelector('main'),
+
+    // функция сброса формы загрузки
+    resetPictureEdition: function () {
+      scaleLevel = 100;
+      imgUploadInput.value = '';
+      textHashtags.value = '';
+      textDescription.value = '';
+      imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
+      imgUploadPreview.classList.remove(imgUploadPreviewCurrentClass);
+      imgUploadPreviewCurrentClass = 'effects__preview--none';
+      effectLevelLine.classList.add('hidden');
+      resetEffects();
+    }
+  };
+
   // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
   var imgUploadInput = document.querySelector('.img-upload__input');
 
@@ -32,23 +49,10 @@
     document.addEventListener('keydown', closeImgUploadOverlayHandler);
   });
 
-  // функция сброса формы загрузки
-  window.resetPictureEdition = function () {
-    scaleLevel = 100;
-    imgUploadInput.value = '';
-    textHashtags.value = '';
-    textDescription.value = '';
-    imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
-    imgUploadPreview.classList.remove(imgUploadPreviewCurrentClass);
-    imgUploadPreviewCurrentClass = 'effects__preview--none';
-    effectLevelLine.classList.add('hidden');
-    resetEffects();
-  };
-
   // функция закрытия формы редактирования изображения
   var closePictureEdition = function () {
     imgUploadOverlay.classList.add('hidden');
-    window.resetPictureEdition();
+    window.inputForm.resetPictureEdition();
     document.removeEventListener('keydown', closeImgUploadOverlayHandler);
   };
 
@@ -90,7 +94,7 @@
       imgUploadPreviewCurrentClass = 'effects__preview--' + currentValue;
       imgUploadPreview.classList.add(imgUploadPreviewCurrentClass);
     };
-    window.debounce(changeEffect);
+    window.setup.debounce(changeEffect);
   };
 
   document.querySelectorAll('input[name="effect"]').forEach(function (input) {
@@ -108,10 +112,10 @@
     var hashtags = value.split(' ');
     var obj = {};
 
-    for (var i = 0; i < hashtags.length; i++) {
-      hashtags[i] = hashtags[i].toLowerCase();
-      obj[hashtags[i]] = true;
-    }
+    hashtags.forEach(function (item) {
+      item = item.toLowerCase();
+      obj[item] = true;
+    });
 
     var uniqueHashtagsAmount = Object.keys(obj).length;
 
@@ -125,13 +129,11 @@
 
 
   // Открытие сообщения об отправке
-  window.main = document.querySelector('main');
-
   var successWindowTemplate = document.querySelector('#success').content.querySelector('.success');
 
   var successHandler = function () {
     var closeSuccessWindow = function () {
-      window.main.removeChild(successWindow);
+      window.inputForm.main.removeChild(successWindow);
     };
 
     var successButtonClickHandler = function (evt) {
@@ -153,10 +155,10 @@
     document.addEventListener('keydown', successButtonEscPressHandler);
 
     var successWindow = successWindowTemplate.cloneNode(true);
-    window.main.appendChild(successWindow);
+    window.inputForm.main.appendChild(successWindow);
     imgUploadOverlay.classList.add('hidden');
     imgUploadInput.value = '';
-    resetPictureEdition();
+    window.inputForm.resetPictureEdition();
 
     var successButton = document.querySelector('.success__button');
     document.addEventListener('click', successButtonClickHandler);
@@ -164,22 +166,29 @@
 
   var errorHandler = function () {
     imgUploadOverlay.classList.add('hidden');
-    window.showError();
+    window.setup.showError();
   };
 
   var submitHandler = function (evt) {
     evt.preventDefault();
     var inputs = evt.target.querySelectorAll('input');
+    inputs.forEach(function (element) {
+      element.removeAttribute('style');
+    });
+    var array = Array.from(inputs);
+    var currentInput;
 
-    for (var i = 0; i < inputs.length; i++) {
-      if (!inputs[i].validity.valid) {
-        inputs[i].setCustomValidity('Ошибочка!!!');
-        inputs[i].style.color = 'red';
-        return;
-      } else {
-        inputs[i].removeAttribute('style');
-      }
+    var isInvalid = function (element) {
+      currentInput = element;
+      return element.validity.valid === false;
+    };
+
+    if (array.some(isInvalid)) {
+      currentInput.setCustomValidity('Ошибочка!!!');
+      currentInput.style.color = 'red';
+      return;
     }
+
     window.backend.save(new FormData(imgUploadSubmit), successHandler, errorHandler);
   };
 
@@ -229,11 +238,7 @@
       startCoordinateX = moveEvt.clientX;
       var currentCoordinate = effectLevelPin.offsetLeft - shift;
 
-      if (currentCoordinate <= 0) {
-        effectLevelPin.style.left = '0';
-      } else if (currentCoordinate >= EFFECT_LEVEL_LINE) {
-        effectLevelPin.style.left = EFFECT_LEVEL_LINE + 'px';
-      } else {
+      if (currentCoordinate >= 0 && currentCoordinate <= EFFECT_LEVEL_LINE) {
         effectLevelPin.style.left = currentCoordinate + 'px';
       }
 
@@ -242,18 +247,18 @@
       effectLevelDepth.style.width = effectIntensionLevel + '%';
       effectLevelValue.value = effectIntensionLevel;
 
-      var setEffect = function() {
+      var setEffect = function () {
         switch (imgUploadPreviewCurrentClass) {
           case 'effects__preview--chrome': imgUploadPreview.style.filter = 'grayscale(' + (effectIntensionLevel / 100) + ')';
-          break;
+            break;
           case 'effects__preview--sepia': imgUploadPreview.style.filter = 'sepia(' + (effectIntensionLevel / 100) + ')';
-          break;
+            break;
           case 'effects__preview--marvin': imgUploadPreview.style.filter = 'invert(' + effectIntensionLevel + '%)';
-          break;
+            break;
           case 'effects__preview--phobos': imgUploadPreview.style.filter = 'blur(' + Math.round(effectIntensionLevel / 30) + 'px)';
-          break;
+            break;
           case 'effects__preview--heat': imgUploadPreview.style.filter = 'brightness(' + Math.ceil(effectIntensionLevel / 30) + ')';
-          break;
+            break;
         }
       };
       setEffect();
