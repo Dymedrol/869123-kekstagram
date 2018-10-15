@@ -33,7 +33,7 @@
   });
 
   // функция сброса формы загрузки
-  var resetPictureEdition = function () {
+  window.resetPictureEdition = function () {
     scaleLevel = 100;
     imgUploadInput.value = '';
     textHashtags.value = '';
@@ -48,7 +48,7 @@
   // функция закрытия формы редактирования изображения
   var closePictureEdition = function () {
     imgUploadOverlay.classList.add('hidden');
-    resetPictureEdition();
+    window.resetPictureEdition();
     document.removeEventListener('keydown', closeImgUploadOverlayHandler);
   };
 
@@ -109,6 +109,7 @@
     var obj = {};
 
     for (var i = 0; i < hashtags.length; i++) {
+      hashtags[i] = hashtags[i].toLowerCase();
       obj[hashtags[i]] = true;
     }
 
@@ -162,6 +163,7 @@
   };
 
   var errorHandler = function () {
+    imgUploadOverlay.classList.add('hidden');
     window.showError();
   };
 
@@ -221,7 +223,7 @@
     evt.preventDefault();
     var startCoordinateX = evt.clientX;
 
-    var LevelPinMouseMoveHandler = function (moveEvt) {
+    var levelPinMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = startCoordinateX - moveEvt.clientX;
       startCoordinateX = moveEvt.clientX;
@@ -240,27 +242,30 @@
       effectLevelDepth.style.width = effectIntensionLevel + '%';
       effectLevelValue.value = effectIntensionLevel;
 
-      switch (imgUploadPreviewCurrentClass) {
-        case 'effects__preview--chrome': imgUploadPreview.style.filter = 'grayscale(' + (effectIntensionLevel / 100) + ')';
+      var setEffect = function() {
+        switch (imgUploadPreviewCurrentClass) {
+          case 'effects__preview--chrome': imgUploadPreview.style.filter = 'grayscale(' + (effectIntensionLevel / 100) + ')';
           break;
-        case 'effects__preview--sepia': imgUploadPreview.style.filter = 'sepia(' + (effectIntensionLevel / 100) + ')';
+          case 'effects__preview--sepia': imgUploadPreview.style.filter = 'sepia(' + (effectIntensionLevel / 100) + ')';
           break;
-        case 'effects__preview--marvin': imgUploadPreview.style.filter = 'invert(' + effectIntensionLevel + '%)';
+          case 'effects__preview--marvin': imgUploadPreview.style.filter = 'invert(' + effectIntensionLevel + '%)';
           break;
-        case 'effects__preview--phobos': imgUploadPreview.style.filter = 'blur(' + Math.round(effectIntensionLevel / 30) + 'px)';
+          case 'effects__preview--phobos': imgUploadPreview.style.filter = 'blur(' + Math.round(effectIntensionLevel / 30) + 'px)';
           break;
-        case 'effects__preview--heat': imgUploadPreview.style.filter = 'brightness(' + Math.ceil(effectIntensionLevel / 30) + ')';
+          case 'effects__preview--heat': imgUploadPreview.style.filter = 'brightness(' + Math.ceil(effectIntensionLevel / 30) + ')';
           break;
-      }
+        }
+      };
+      setEffect();
     };
 
     var levelPinMouseUpHandler = function (moveUpEvt) {
       moveUpEvt.preventDefault();
-      document.removeEventListener('mousemove', LevelPinMouseMoveHandler);
+      document.removeEventListener('mousemove', levelPinMouseMoveHandler);
       document.removeEventListener('mouseup', levelPinMouseUpHandler);
     };
 
-    document.addEventListener('mousemove', LevelPinMouseMoveHandler);
+    document.addEventListener('mousemove', levelPinMouseMoveHandler);
     document.addEventListener('mouseup', levelPinMouseUpHandler);
   });
 })();

@@ -3,8 +3,7 @@
 (function () {
   // Генерирует карточку с фотографией пользователя
   var renderCard = function (cards) {
-    var picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
-    var element = picturesTemplate.cloneNode(true);
+    var element = document.querySelector('#picture').content.querySelector('.picture').cloneNode(true);
     element.querySelector('.picture__img').src = cards.url;
     element.querySelector('.picture__likes').textContent = cards.likes;
     element.querySelector('.picture__comments').textContent = String(cards.comments.length);

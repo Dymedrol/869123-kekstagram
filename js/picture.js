@@ -105,12 +105,7 @@
     filtredImages = [];
 
     var sortPicsByComments = function (picA, picB) {
-      if (picA.comments.length < picB.comments.length) {
-        return 1;
-      } else if (picA.comments.length > picB.comments.length) {
-        return -1;
-      }
-      return 0;
+      return picB.comments.length - picA.comments.length;
     };
 
     filtredImages = loadedImages.slice();

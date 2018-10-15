@@ -2,6 +2,7 @@
 
 (function () {
   var MAX_COMMENTS_AMOUNT = 5;
+  var ESC_KEYCODE = 27;
 
   window.bigPicture = document.querySelector('.big-picture');
   var body = document.querySelector('body');
@@ -25,8 +26,10 @@
     });
 
     // Закрываем элемент .big-picture по нажатию ESC
-    var bigPictureEscPressHandlrer = function () {
-      closeBigPicture();
+    var bigPictureEscPressHandlrer = function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        closeBigPicture();
+      }
     };
 
     document.addEventListener('keydown', bigPictureEscPressHandlrer);

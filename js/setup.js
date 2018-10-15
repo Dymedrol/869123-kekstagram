@@ -20,17 +20,16 @@
   };
 
   window.showError = function () {
-    var errorWindowTemplate = document.querySelector('#error').content.querySelector('.error');
-    var errorWindow = errorWindowTemplate.cloneNode(true);
+    window.main.appendChild(document.querySelector('#error').content.querySelector('.error').cloneNode(true));
     var errorWindowPopUp = document.querySelector('.error');
-    window.main.appendChild(errorWindow);
 
     var closeErrorWindow = function () {
+      window.resetPictureEdition();
       window.main.removeChild(errorWindowPopUp);
     };
 
     var errorButtonClickHandler = function (evt) {
-      if (evt.target === errorWindowPopUp || evt.target === errorButton) {
+      if (evt.target === errorWindowPopUp || evt.target.className === 'error__button') {
         closeErrorWindow();
         document.removeEventListener('click', errorButtonClickHandler);
       }
@@ -44,7 +43,6 @@
     };
 
     document.addEventListener('keydown', errorButtonEscPressHandler);
-    var errorButton = document.querySelector('.error__button');
     document.addEventListener('click', errorButtonClickHandler);
   };
 
